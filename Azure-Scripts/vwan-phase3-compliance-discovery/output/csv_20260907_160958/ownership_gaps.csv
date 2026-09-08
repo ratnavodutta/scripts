@@ -1,0 +1,15 @@
+CMDB Row #,Name,Subscription ID,Organization,Environment,Supported By,Owned By
+2,ai-p-usa01,a4a3d838-d4f6-4db7-9663-2244ca30883a,(blank),(blank),Brandon Stirnaman (Brandon.Stirnaman),
+4,BB India Finance,a69cbc6b-4caf-4cca-bcab-0b55c4aa5020,(blank),(blank),Deepthika Korukonda (Deepthika.Korukonda),
+12,Corp IT D01,cc393352-2043-4481-a89d-8a18154b539d,(blank),(blank),,
+15,customers-nonprod,7200eda5-e86f-4098-86df-e8c8692bbe46,(blank),Test,Dee Dee Goss (DeeDee.Goss),Dee Dee Goss (DeeDee.Goss)
+16,customers-prod,603e62d7-1d0c-4bd9-b388-6c09ab00ee3c,(blank),Production,Dee Dee Goss (DeeDee.Goss),Dee Dee Goss (DeeDee.Goss)
+22,Cybersecurity - F01,49e3aae8-9a22-48a5-a5e2-5bacee9a2a58,(blank),Production,Michael Copeland-clarke (Michael.Copeland-Cla),
+41,identity,f96fb6cd-a8fc-4268-920a-cfc05dde1821,(blank),Production,Dee Dee Goss (DeeDee.Goss),Dee Dee Goss (DeeDee.Goss)
+47,Marketplace Purchases,282445b9-33f5-49e2-b55b-d7dce6f948c3,(blank),(blank),Jeanne Callahan (JeanneCa),Aneta Cwian (Aneta.Cwian)
+72,Production - S36,c06b2481-54fa-4354-816f-935ce4283ee6,(blank),Production,Joe Campagna (JoeCa),Cy Shealy (CySh)
+87,Production - S60,9bda8dc1-6aaf-49f9-b617-b6a66085f83a,(blank),(blank),JC Walker (JC.Walker),
+91,QuadSCI,97d8f88d-d1a1-431d-a3de-4722636ca341,(blank),(blank),Aaron Hinojosa (Aaron.Hinojosa),
+103,Test - T60,c4ebd390-be1c-4684-ac0a-1917dbe747f7,(blank),Test,JC Walker (JC.Walker),
+106,Visual Studio Enterprise Subscription,edf61ee5-935b-493f-8468-b02cca94a29f,(blank),(blank),,
+107,Visual Studio Enterprise Subscription,4f9ce34b-fe17-491f-861a-e8124bbc00ae,(blank),(blank),,

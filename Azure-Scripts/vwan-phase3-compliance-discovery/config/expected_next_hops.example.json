@@ -1,0 +1,18 @@
+{
+  "//": "Copy to expected_next_hops.json and edit. Values here EXTEND what Phase A auto-discovers from the vWAN/vHub firewall resources; they do not replace it. Anything listed here is treated as an additional compliant next hop.",
+
+  "//_next_hop_ips": "Private IPs of hub firewalls/NVAs that should be treated as compliant next hops, in ADDITION to what is auto-discovered from each secured vHub's Azure Firewall / third-party NVA resource. Example values below are illustrative of a Blackbaud-style azure-core deployment (region hub firewalls) — replace with real values or remove.",
+  "additional_next_hop_ips": [
+    "10.193.0.4",
+    "10.193.8.4"
+  ],
+
+  "//_next_hop_types": "Azure route next-hop-type strings that should also be considered compliant (case-sensitive, as returned by the effective route API). VirtualAppliance is the normal type for a firewall/NVA next hop. Only add others (e.g. VirtualNetworkGateway) if egress genuinely transits the hub via that path.",
+  "additional_next_hop_types": [],
+
+  "//_hub_ids": "Resource IDs of virtual hubs whose auto-discovered firewall/NVA IP should be trusted even if Phase A could not read the firewall resource directly (e.g. due to a 403 on Microsoft.Network/azureFirewalls but Reader access to the hub). Optional.",
+  "trusted_hub_ids": [],
+
+  "//_exclude_subnets": "Subnets to force into EXPECTED_BYPASS regardless of Azure metadata, keyed by full subnet resource ID. Use sparingly and only for infra that genuinely bypasses by design but isn't one of the built-in special subnet names (GatewaySubnet, AzureFirewallSubnet, AzureBastionSubnet, RouteServerSubnet, AzureFirewallManagementSubnet).",
+  "manual_expected_bypass_subnet_ids": []
+}

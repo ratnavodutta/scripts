@@ -1,0 +1,179 @@
+2026-09-06 15:02:47 INFO     vwan_compliance.main: Reading CMDB export: cmdb_ci_cloud_service_account.xlsx
+2026-09-06 15:02:47 INFO     vwan_compliance.main: Reading Azure portal subscription export: Subscriptions.csv
+2026-09-06 15:02:47 INFO     vwan_compliance.reconcile: ORG_INFERRED: 'ai-p-usa01' (a4a3d838-d4f6-4db7-9663-2244ca30883a) has no CMDB Organization; inferring 'Blackbaud RDO - Engineering System - Prod' from the Azure Parent Management Group.
+2026-09-06 15:02:47 INFO     vwan_compliance.reconcile: ORG_INFERRED: 'BB India Finance' (a69cbc6b-4caf-4cca-bcab-0b55c4aa5020) has no CMDB Organization; inferring 'IT SingleUse' from the Azure Parent Management Group.
+2026-09-06 15:02:47 INFO     vwan_compliance.reconcile: ORG_INFERRED: 'Corp IT D01' (cc393352-2043-4481-a89d-8a18154b539d) has no CMDB Organization; inferring 'Blackbaud RDO - Default - Onboarding' from the Azure Parent Management Group.
+2026-09-06 15:02:47 WARNING  vwan_compliance.reconcile: ONLY_IN_CMDB (ACCESS_OR_TENANT_GAP): 'customers-nonprod' (7200eda5-e86f-4098-86df-e8c8692bbe46) is in the CMDB export but absent from the Azure portal export - cannot scan.
+2026-09-06 15:02:47 WARNING  vwan_compliance.reconcile: ONLY_IN_CMDB (ACCESS_OR_TENANT_GAP): 'customers-prod' (603e62d7-1d0c-4bd9-b388-6c09ab00ee3c) is in the CMDB export but absent from the Azure portal export - cannot scan.
+2026-09-06 15:02:47 INFO     vwan_compliance.reconcile: ORG_INFERRED: 'Cybersecurity - F01' (49e3aae8-9a22-48a5-a5e2-5bacee9a2a58) has no CMDB Organization; inferring 'CS Prod' from the Azure Parent Management Group.
+2026-09-06 15:02:47 WARNING  vwan_compliance.reconcile: ONLY_IN_CMDB (ACCESS_OR_TENANT_GAP): 'identity' (f96fb6cd-a8fc-4268-920a-cfc05dde1821) is in the CMDB export but absent from the Azure portal export - cannot scan.
+2026-09-06 15:02:47 INFO     vwan_compliance.reconcile: ORG_INFERRED: 'Marketplace Purchases' (282445b9-33f5-49e2-b55b-d7dce6f948c3) has no CMDB Organization; inferring 'Marketplace' from the Azure Parent Management Group.
+2026-09-06 15:02:47 INFO     vwan_compliance.reconcile: ORG_INFERRED: 'Production - S36' (c06b2481-54fa-4354-816f-935ce4283ee6) has no CMDB Organization; inferring 'Blackbaud RDO - BLKB CRM - Prod' from the Azure Parent Management Group.
+2026-09-06 15:02:47 INFO     vwan_compliance.reconcile: ORG_INFERRED: 'Production - S60' (9bda8dc1-6aaf-49f9-b617-b6a66085f83a) has no CMDB Organization; inferring 'Blackbaud RDO - Luminate Online - Prod' from the Azure Parent Management Group.
+2026-09-06 15:02:47 INFO     vwan_compliance.reconcile: ORG_INFERRED: 'QuadSCI' (97d8f88d-d1a1-431d-a3de-4722636ca341) has no CMDB Organization; inferring 'Blackbaud RDO - Internal - Prod' from the Azure Parent Management Group.
+2026-09-06 15:02:47 INFO     vwan_compliance.reconcile: ORG_INFERRED: 'Test - T60' (c4ebd390-be1c-4684-ac0a-1917dbe747f7) has no CMDB Organization; inferring 'Blackbaud RDO - Luminate Online - Non-prod' from the Azure Parent Management Group.
+2026-09-06 15:02:47 WARNING  vwan_compliance.reconcile: ONLY_IN_CMDB (ACCESS_OR_TENANT_GAP): 'Visual Studio Enterprise' (1c556e48-5e49-4566-ab0d-4fa72de0c85c) is in the CMDB export but absent from the Azure portal export - cannot scan.
+2026-09-06 15:02:47 WARNING  vwan_compliance.reconcile: ONLY_IN_CMDB (ACCESS_OR_TENANT_GAP): 'Visual Studio Enterprise Subscription' (54978feb-bc91-4d24-8035-53dea0dd0e62) is in the CMDB export but absent from the Azure portal export - cannot scan.
+2026-09-06 15:02:47 INFO     vwan_compliance.reconcile: ORG_INFERRED: 'Visual Studio Enterprise Subscription' (edf61ee5-935b-493f-8468-b02cca94a29f) has no CMDB Organization; inferring 'Subscription Default' from the Azure Parent Management Group.
+2026-09-06 15:02:47 INFO     vwan_compliance.reconcile: ORG_INFERRED: 'Visual Studio Enterprise Subscription' (4f9ce34b-fe17-491f-861a-e8124bbc00ae) has no CMDB Organization; inferring 'Subscription Default' from the Azure Parent Management Group.
+2026-09-06 15:02:47 WARNING  vwan_compliance.reconcile: ONLY_IN_CMDB (ACCESS_OR_TENANT_GAP): 'Visual Studio Professional Subscription' (3cdfcccd-56f2-48c8-8539-7426d21df0ce) is in the CMDB export but absent from the Azure portal export - cannot scan.
+2026-09-06 15:02:47 WARNING  vwan_compliance.reconcile: ONLY_IN_AZURE: 'Visual Studio Enterprise Subscription' (4dd61b77-b84d-425f-bbaa-c3fecb36b570) is in the Azure export but absent from the CMDB export - shadow/unmanaged subscription.
+2026-09-06 15:02:47 WARNING  vwan_compliance.reconcile: ONLY_IN_AZURE: 'Visual Studio Enterprise Subscription' (e6298276-5c24-4ec4-a883-0522633fef31) is in the Azure export but absent from the CMDB export - shadow/unmanaged subscription.
+2026-09-06 15:02:51 INFO     vwan_compliance.auth: Credential validated (tenant=default).
+2026-09-06 15:02:52 INFO     vwan_compliance.main: Reconciling CMDB scope against subscriptions visible to this credential...
+2026-09-06 15:02:57 WARNING  vwan_compliance.inventory: IN_CMDB_NOT_VISIBLE: 'customers-nonprod' (7200eda5-e86f-4098-86df-e8c8692bbe46) is in the CMDB export but not visible to this credential - missing RBAC or a stale record.
+2026-09-06 15:02:57 WARNING  vwan_compliance.inventory: IN_CMDB_NOT_VISIBLE: 'customers-prod' (603e62d7-1d0c-4bd9-b388-6c09ab00ee3c) is in the CMDB export but not visible to this credential - missing RBAC or a stale record.
+2026-09-06 15:02:57 WARNING  vwan_compliance.inventory: IN_CMDB_NOT_VISIBLE: 'identity' (f96fb6cd-a8fc-4268-920a-cfc05dde1821) is in the CMDB export but not visible to this credential - missing RBAC or a stale record.
+2026-09-06 15:02:57 WARNING  vwan_compliance.inventory: IN_CMDB_NOT_VISIBLE: 'Visual Studio Enterprise' (1c556e48-5e49-4566-ab0d-4fa72de0c85c) is in the CMDB export but not visible to this credential - missing RBAC or a stale record.
+2026-09-06 15:02:57 WARNING  vwan_compliance.inventory: IN_CMDB_NOT_VISIBLE: 'Visual Studio Enterprise Subscription' (54978feb-bc91-4d24-8035-53dea0dd0e62) is in the CMDB export but not visible to this credential - missing RBAC or a stale record.
+2026-09-06 15:02:57 WARNING  vwan_compliance.inventory: IN_CMDB_NOT_VISIBLE: 'Visual Studio Enterprise with MSDN' (6016adc1-f347-4306-8e3f-ec0cdc63013f) is in the CMDB export but not visible to this credential - missing RBAC or a stale record.
+2026-09-06 15:02:57 WARNING  vwan_compliance.inventory: IN_CMDB_NOT_VISIBLE: 'Visual Studio Enterprise with MSDN' (9c27de2b-cc91-4b2d-8004-5453dd7e8c50) is in the CMDB export but not visible to this credential - missing RBAC or a stale record.
+2026-09-06 15:02:57 WARNING  vwan_compliance.inventory: IN_CMDB_NOT_VISIBLE: 'Visual Studio Professional Subscription' (3cdfcccd-56f2-48c8-8539-7426d21df0ce) is in the CMDB export but not visible to this credential - missing RBAC or a stale record.
+2026-09-06 15:02:57 INFO     vwan_compliance.main: Scan targets: 102 IN_BOTH (live). 3 excluded by file-level reconciliation (disabled/access-gap/pattern). IN_CMDB_NOT_VISIBLE: 8. VISIBLE_NOT_IN_CMDB (shadow): 0.
+2026-09-06 15:02:57 INFO     vwan_compliance.main: Phase 2: discovering vWAN/vHub baseline...
+2026-09-06 15:08:58 INFO     vwan_compliance.state: Loaded scan state from phase3_state.json (102 subscription(s) recorded).
+2026-09-06 15:08:58 INFO     vwan_compliance.main: Incremental scan plan: 67 to (re-)scan, 35 already evaluated (reused from state), 0 skipped (--retry-failed-only).
+2026-09-06 15:08:58 INFO     vwan_compliance.main: Phase 3: sweeping VNets/subnets via Azure Resource Graph...
+2026-09-06 15:09:07 DEBUG    vwan_compliance.inventory: Resource Graph page 1: 447 VNets.
+2026-09-06 15:09:08 INFO     vwan_compliance.main: Discovered 3389 subnets across 67 subscription(s) to (re-)scan.
+2026-09-06 15:09:08 INFO     vwan_compliance.main: Phase 4: evaluating compliance (effective routes)...
+2026-09-06 15:09:11 INFO     vwan_compliance.main: State recorded for 11a6fb25-e963-4503-9f13-2f400ca2ad2a: PARTIAL (5/8 subnet(s) errored).
+2026-09-06 15:09:41 INFO     vwan_compliance.main: State recorded for 19a8c784-29d0-45e3-939e-cce201b42948: PARTIAL (9/21 subnet(s) errored).
+2026-09-06 15:09:44 INFO     vwan_compliance.main: State recorded for 286f7c3f-377d-464f-8a92-c186399a2582: PARTIAL (8/28 subnet(s) errored).
+2026-09-06 15:09:50 INFO     vwan_compliance.main: State recorded for 2f7f1889-03f5-42e0-bad3-f75abc161562: PARTIAL (44/84 subnet(s) errored).
+2026-09-06 15:09:52 INFO     vwan_compliance.main: State recorded for 150ea8a8-4006-49a6-8c11-b7d7c2942e61: PARTIAL (6/80 subnet(s) errored).
+2026-09-06 15:09:59 INFO     vwan_compliance.main: State recorded for 34659578-4332-4feb-a83b-f926816041e7: PARTIAL (157/232 subnet(s) errored).
+2026-09-06 15:10:04 INFO     vwan_compliance.main: State recorded for 38dc1973-b3ec-4db8-8f42-f76fc59e65b0: PARTIAL (17/96 subnet(s) errored).
+2026-09-06 15:10:07 INFO     vwan_compliance.main: State recorded for 399dd175-aa73-41a0-8640-ef37a5eabbc1: PARTIAL (6/19 subnet(s) errored).
+2026-09-06 15:10:13 INFO     vwan_compliance.main: State recorded for 39a03bdf-ce1d-41ef-839d-ab040887a132: PARTIAL (79/139 subnet(s) errored).
+2026-09-06 15:10:14 INFO     vwan_compliance.main: State recorded for 354e16b1-a3dd-4cc2-b271-4e7429e5fa75: PARTIAL (3/7 subnet(s) errored).
+2026-09-06 15:10:16 INFO     vwan_compliance.main: State recorded for 3bcaa40f-3d9b-4e6d-9218-abb0caf87bd3: PARTIAL (2/18 subnet(s) errored).
+2026-09-06 15:10:16 INFO     vwan_compliance.main: State recorded for 3a3e015b-350b-4b91-b340-9b420ffe31d8: PARTIAL (3/7 subnet(s) errored).
+2026-09-06 15:10:17 INFO     vwan_compliance.main: State recorded for 47dbdbb3-c892-4b57-9fd1-7b48b841ed2f: PARTIAL (6/19 subnet(s) errored).
+2026-09-06 15:10:19 INFO     vwan_compliance.main: State recorded for 49e3aae8-9a22-48a5-a5e2-5bacee9a2a58: ERROR (1/1 subnet(s) errored).
+2026-09-06 15:10:20 INFO     vwan_compliance.main: State recorded for 4ea3d908-134c-4c53-a466-507ef4ea4c4b: PARTIAL (3/9 subnet(s) errored).
+2026-09-06 15:10:20 INFO     vwan_compliance.main: State recorded for 530a7eee-f22d-4641-bb2d-5911586ac2d7: PARTIAL (2/18 subnet(s) errored).
+2026-09-06 15:10:22 INFO     vwan_compliance.main: State recorded for 58eb6429-13d9-4966-bd31-8b49e15f6a09: PARTIAL (29/89 subnet(s) errored).
+2026-09-06 15:10:25 INFO     vwan_compliance.main: State recorded for 594b1ca6-9e11-4d85-9baf-1f1deaabba1c: PARTIAL (23/93 subnet(s) errored).
+2026-09-06 15:10:29 INFO     vwan_compliance.main: State recorded for 5f92497c-be1c-4491-8376-3833b5b822d2: PARTIAL (19/136 subnet(s) errored).
+2026-09-06 15:10:33 INFO     vwan_compliance.main: State recorded for 61128873-7a55-425e-adc8-59bdba75d668: PARTIAL (18/62 subnet(s) errored).
+2026-09-06 15:10:39 INFO     vwan_compliance.main: State recorded for 64e519bc-cea1-4942-b0ad-8f0eefc9ba6a: PARTIAL (37/68 subnet(s) errored).
+2026-09-06 15:11:32 INFO     vwan_compliance.main: State recorded for 66c7e60e-86dc-4cac-9a45-dbdce2ee4dab: PARTIAL (18/133 subnet(s) errored).
+2026-09-06 15:11:38 INFO     vwan_compliance.main: State recorded for 69bc57af-732e-4b0a-aefc-5992160ca36c: PARTIAL (78/139 subnet(s) errored).
+2026-09-06 15:11:43 INFO     vwan_compliance.main: State recorded for 6bc7702e-87d1-42be-aa65-b984d750231d: PARTIAL (39/68 subnet(s) errored).
+2026-09-06 15:11:46 INFO     vwan_compliance.main: State recorded for 6fa24ab6-2af5-4ab2-aef0-f5446b043476: PARTIAL (2/30 subnet(s) errored).
+2026-09-06 15:11:46 INFO     vwan_compliance.main: State recorded for 7044fc36-532d-4775-b808-1e4a4c744936: PARTIAL (2/22 subnet(s) errored).
+2026-09-06 15:11:47 INFO     vwan_compliance.main: State recorded for 7253b84c-2f1a-4b10-9046-1fbdcc4334f1: PARTIAL (9/24 subnet(s) errored).
+2026-09-06 15:11:49 INFO     vwan_compliance.main: State recorded for 73b4b77a-58e4-4910-88b1-2f4da8e47e32: PARTIAL (4/11 subnet(s) errored).
+2026-09-06 15:11:51 INFO     vwan_compliance.main: State recorded for 75f07d7f-0c13-406c-81d7-09ece0371691: PARTIAL (15/32 subnet(s) errored).
+2026-09-06 15:11:52 WARNING  vwan_compliance.retry: Network/service error on begin_get_effective_route_table [/subscriptions/68a6884b-5104-498c-aff1-cfcc392328df/resourceGroups/T01AUT01LBV01RG/providers/Microsoft.Network/networkInterfaces/T07AUTL01LBV01.BGF.APP], attempt 1/6, sleeping 1.0s
+2026-09-06 15:11:54 INFO     vwan_compliance.main: State recorded for 76493216-5565-4111-acdb-46f019100159: PARTIAL (5/14 subnet(s) errored).
+2026-09-06 15:11:54 INFO     vwan_compliance.main: State recorded for 68a6884b-5104-498c-aff1-cfcc392328df: PARTIAL (9/19 subnet(s) errored).
+2026-09-06 15:11:55 INFO     vwan_compliance.main: State recorded for 76743f8b-8334-4537-a9ba-436c231657c9: PARTIAL (6/12 subnet(s) errored).
+2026-09-06 15:11:59 INFO     vwan_compliance.main: State recorded for 836028b0-c7c0-4475-af24-442c5189e404: PARTIAL (23/56 subnet(s) errored).
+2026-09-06 15:12:02 INFO     vwan_compliance.main: State recorded for 89dc57c8-df88-4356-be77-807e5a482226: PARTIAL (2/4 subnet(s) errored).
+2026-09-06 15:12:02 INFO     vwan_compliance.main: State recorded for 9015a79f-c20b-45db-b3df-8fef8ca0332f: PARTIAL (5/9 subnet(s) errored).
+2026-09-06 15:12:03 INFO     vwan_compliance.main: State recorded for 97d8f88d-d1a1-431d-a3de-4722636ca341: PARTIAL (3/10 subnet(s) errored).
+2026-09-06 15:12:05 INFO     vwan_compliance.main: State recorded for 97df6729-2a4f-4376-a3bd-2bf103f9ee7a: PARTIAL (2/11 subnet(s) errored).
+2026-09-06 15:12:06 INFO     vwan_compliance.main: State recorded for 9bda8dc1-6aaf-49f9-b617-b6a66085f83a: PARTIAL (25/29 subnet(s) errored).
+2026-09-06 15:12:10 INFO     vwan_compliance.main: State recorded for 9d034a4b-fe28-47fb-8058-017d6d5a2528: PARTIAL (7/15 subnet(s) errored).
+2026-09-06 15:12:11 INFO     vwan_compliance.main: State recorded for 9e37b779-7f77-4259-ade8-f9600cb7b49d: PARTIAL (16/64 subnet(s) errored).
+2026-09-06 15:12:16 INFO     vwan_compliance.main: State recorded for a04a9ac3-f136-4f02-8eb1-9fbd4c805f50: PARTIAL (15/62 subnet(s) errored).
+2026-09-06 15:12:19 INFO     vwan_compliance.main: State recorded for a3a0b4d2-dce2-40ae-8793-7ebed39efeca: PARTIAL (1/7 subnet(s) errored).
+2026-09-06 15:12:19 INFO     vwan_compliance.main: State recorded for a4a3d838-d4f6-4db7-9663-2244ca30883a: PARTIAL (4/8 subnet(s) errored).
+2026-09-06 15:12:21 INFO     vwan_compliance.main: State recorded for a652b44a-49fd-43a1-9536-492074df3f27: PARTIAL (17/94 subnet(s) errored).
+2026-09-06 15:12:23 INFO     vwan_compliance.main: State recorded for aa89a992-d05f-4885-baa0-eb7b605946a3: PARTIAL (2/7 subnet(s) errored).
+2026-09-06 15:12:24 INFO     vwan_compliance.main: State recorded for ab39afd4-e656-4229-a072-8313cc291248: PARTIAL (3/60 subnet(s) errored).
+2026-09-06 15:12:25 INFO     vwan_compliance.main: State recorded for b61267f3-48ad-42e6-9f5e-848cc64fe331: PARTIAL (7/22 subnet(s) errored).
+2026-09-06 15:12:28 INFO     vwan_compliance.main: State recorded for bdaa1b3a-cfcf-4fca-ad6f-d36654ff44f5: PARTIAL (16/95 subnet(s) errored).
+2026-09-06 15:12:31 INFO     vwan_compliance.main: State recorded for be142778-9fae-45f2-8ad8-6f743dc828e1: PARTIAL (5/12 subnet(s) errored).
+2026-09-06 15:12:33 INFO     vwan_compliance.main: State recorded for c06b2481-54fa-4354-816f-935ce4283ee6: PARTIAL (40/67 subnet(s) errored).
+2026-09-06 15:12:36 INFO     vwan_compliance.main: State recorded for c4ebd390-be1c-4684-ac0a-1917dbe747f7: PARTIAL (11/15 subnet(s) errored).
+2026-09-06 15:12:40 INFO     vwan_compliance.main: State recorded for c807483d-835a-4e97-8aa1-17a013df9663: PARTIAL (16/26 subnet(s) errored).
+2026-09-06 15:12:43 INFO     vwan_compliance.main: State recorded for c92db45e-cef9-4dc1-aec9-86fcd5b23a24: PARTIAL (2/12 subnet(s) errored).
+2026-09-06 15:12:44 INFO     vwan_compliance.main: State recorded for cc085d57-0f75-4941-9818-b3bf86d50b29: PARTIAL (7/29 subnet(s) errored).
+2026-09-06 15:12:52 INFO     vwan_compliance.main: State recorded for cce24824-b042-4cf8-8348-b4e6637677f0: PARTIAL (8/40 subnet(s) errored).
+2026-09-06 15:12:56 INFO     vwan_compliance.main: State recorded for cea9c369-3f9a-443a-a9a3-c936ba6820e8: PARTIAL (28/82 subnet(s) errored).
+2026-09-06 15:13:02 INFO     vwan_compliance.main: State recorded for ccde8cc3-282b-40fb-a6ae-ca8665e17f95: PARTIAL (57/119 subnet(s) errored).
+2026-09-06 15:13:02 INFO     vwan_compliance.main: State recorded for d050ee34-b513-4364-891c-067f86282fe4: PARTIAL (56/161 subnet(s) errored).
+2026-09-06 15:13:06 INFO     vwan_compliance.main: State recorded for d39c1190-e903-4a60-b4e3-8d6b999f6f15: PARTIAL (18/40 subnet(s) errored).
+2026-09-06 15:13:09 INFO     vwan_compliance.main: State recorded for d675d3ff-a488-4f43-9f38-8c7a97483f49: PARTIAL (4/6 subnet(s) errored).
+2026-09-06 15:13:10 INFO     vwan_compliance.main: State recorded for e06cc136-f8d5-429f-950d-9441dc4a03a0: PARTIAL (6/17 subnet(s) errored).
+2026-09-06 15:13:13 INFO     vwan_compliance.main: State recorded for e7d2a634-26a5-4454-be83-448cee9e5636: PARTIAL (10/14 subnet(s) errored).
+2026-09-06 15:13:16 INFO     vwan_compliance.main: State recorded for ebe33ccf-e94b-458e-bef5-639ab3d7d7d9: PARTIAL (3/8 subnet(s) errored).
+2026-09-06 15:13:20 INFO     vwan_compliance.main: State recorded for ed827500-5420-4aea-abd3-cf5b5aa97ed9: PARTIAL (83/235 subnet(s) errored).
+2026-09-06 15:13:25 INFO     vwan_compliance.main: State recorded for f6be8641-4615-4e86-986e-eb3c3764d53c: PARTIAL (51/97 subnet(s) errored).
+2026-09-06 15:13:31 INFO     vwan_compliance.main: State recorded for f74455e7-c211-4447-bf4a-637ea72160ea: PARTIAL (56/99 subnet(s) errored).
+2026-09-06 15:13:34 INFO     vwan_compliance.main: State recorded for f9dc4235-3e35-4f58-b59c-c09fb3e680c1: PARTIAL (6/19 subnet(s) errored).
+2026-09-06 15:13:35 INFO     vwan_compliance.main: Replayed 24 finding(s) from 35 ALREADY_EVALUATED subscription(s) (skipped this run).
+2026-09-06 15:13:37 INFO     vwan_compliance.output: Excel workbook written: output\phase3_compliance.xlsx
+2026-09-06 15:13:37 INFO     vwan_compliance.output: CSV files written to: output\csv
+2026-09-06 15:13:37 INFO     vwan_compliance.output: JSON written: output\phase3_compliance.json
+2026-09-06 15:13:37 INFO     vwan_compliance.report: AI-analysis JSON report written: output\phase3_report.json
+2026-09-06 15:13:37 INFO     vwan_compliance.report: AI-analysis Markdown report written: output\phase3_report.md
+
+=== Phase 0: CMDB Scope Summary ===
+  Total data rows read:      113
+  Valid subscription IDs:    113
+  Duplicate rows:            0
+  Invalid rows:              0
+
+  By Organization:
+    (blank)              14
+    Cybersecurity        6
+    IT                   8
+    IT - VSAS            6
+    RDO                  79
+
+  By Environment:
+    (blank)              8
+    Development          23
+    Production           60
+    Test                 15
+    Training             7
+
+  OWNERSHIP_UNKNOWN (blank Organization/Environment): 14 row(s)
+
+=== Phase 0b: Azure Portal Export Summary ===
+  Total data rows read:      109
+  Valid subscription IDs:    109
+  Duplicate rows:            0
+  Invalid rows:              0
+
+  File reconciliation: IN_BOTH=107  ONLY_IN_CMDB(ACCESS_OR_TENANT_GAP)=6  ONLY_IN_AZURE=2  DISABLED=2  EXCLUDED=8  ORG_INFERRED=11
+
+=== Phase A: vWAN Transit Hub Baseline ===
+  [Cybersecurity - P01] /sec01pwehub-rt01 (westeurope, ) - firewall: NONE DETECTED (config gap) - connections: 0 - gateways: 0
+  [Cybersecurity - P01] /sec01peus2hub-rt01 (eastus2, ) - firewall: NONE DETECTED (config gap) - connections: 0 - gateways: 0
+  [Dev - D40] d40acsr01vwan01/d40acsr01vhub01 (eastus2, 10.220.127.0/24) - firewall: NONE DETECTED (config gap) - connections: 0 - gateways: 1
+  [Networking Production - N01] n01-eus2-vwan-1/n01-wus-vhub-1 (westus, 10.193.16.0/23) - firewall: AzureFirewall 'AzureFirewall_n01-wus-vhub-1' -> 10.193.16.132 - connections: 2 - gateways: 1
+  [Networking Production - N01] n01-eus2-vwan-1/n01-ne-vhub-1 (northeurope, 10.193.64.0/23) - firewall: AzureFirewall 'AzureFirewall_n01-ne-vhub-1' -> 10.193.64.132 - connections: 2 - gateways: 0
+  [Networking Production - N01] n01-eus2-vwan-1/n01-we-vhub-1 (westeurope, 10.193.32.0/23) - firewall: AzureFirewall 'AzureFirewall_n01-we-vhub-1' -> 10.193.32.132 - connections: 6 - gateways: 1
+  [Networking Production - N01] n01-eus2-vwan-1/n01-cus-vhub-1 (centralus, 10.193.8.0/23) - firewall: AzureFirewall 'AzureFirewall_n01-cus-vhub-1' -> 10.193.8.132 - connections: 6 - gateways: 0
+  [Networking Production - N01] n01-eus2-vwan-1/n01-eus2-vhub-1 (eastus2, 10.193.0.0/23) - firewall: AzureFirewall 'AzureFirewall_n01-eus2-vhub-1' -> 10.193.0.132 - connections: 20 - gateways: 1
+  [Networking Production - N01] n01-eus2-vwan-1/n01-ae-vhub-1 (australiaeast, 10.193.40.0/23) - firewall: AzureFirewall 'AzureFirewall_n01-ae-vhub-1' -> 10.193.40.132 - connections: 7 - gateways: 0
+  [Networking Production - N01] n01-eus2-vwan-1/n01-as-vhub-1 (australiasoutheast, 10.193.48.0/23) - firewall: AzureFirewall 'AzureFirewall_n01-as-vhub-1' -> 10.193.48.132 - connections: 2 - gateways: 0
+  [Networking Production - N01] n01-eus2-vwan-1/n01-cnc-vhub-1 (canadacentral, 10.193.24.0/23) - firewall: AzureFirewall 'AzureFirewall_n01-cnc-vhub-1' -> 10.193.24.132 - connections: 6 - gateways: 0
+  [Networking Production - N01] n01-eus2-vwan-1/n01-cne-vhub-1 (canadaeast, 10.193.56.0/23) - firewall: AzureFirewall 'AzureFirewall_n01-cne-vhub-1' -> 10.193.56.132 - connections: 2 - gateways: 0
+  [Networking Test - E01] e01-eus2-vwan-1/e01-cus-vhub-1 (centralus, 10.192.8.0/23) - firewall: AzureFirewall 'AzureFirewall_e01-cus-vhub-1' -> 10.192.8.132 - connections: 9 - gateways: 0
+  [Networking Test - E01] e01-eus2-vwan-1/e01-eus2-vhub-1 (eastus2, 10.192.0.0/23) - firewall: AzureFirewall 'AzureFirewall_e01-eus2-vhub-1' -> 10.192.0.132 - connections: 23 - gateways: 1
+
+  Compliant next-hop IPs (11): 10.192.0.132, 10.192.8.132, 10.193.0.132, 10.193.16.132, 10.193.24.132, 10.193.32.132, 10.193.40.132, 10.193.48.132, 10.193.56.132, 10.193.64.132, 10.193.8.132
+
+=== Phase 3 Compliance Discovery: Console Summary ===
+Total subnets evaluated: 3413
+  COMPLIANT             9  (0.3%)
+  NON_COMPLIANT        50  (1.5%)
+  EXPECTED_BYPASS     217  (6.4%)
+  NOT_EVALUATED      1858  (54.4%)
+  ERROR              1279  (37.5%)
+
+Remaining Phase 3 work (NON_COMPLIANT + NOT_EVALUATED): 1908
+
+CMDB reconciliation: IN_BOTH=105  IN_CMDB_NOT_VISIBLE=8  VISIBLE_NOT_IN_CMDB=0
+OWNERSHIP_UNKNOWN (blank Organization/Environment): 14
+
+Azure export reconciliation: IN_BOTH=107  ONLY_IN_CMDB(ACCESS_OR_TENANT_GAP)=6  ONLY_IN_AZURE=2  DISABLED=2  EXCLUDED=8  ORG_INFERRED=11
+
+Outputs written to: C:\01-Work\05-Scripts-Only\Azure-Scripts\vwan-phase3-compliance-discovery\output
+Elapsed: 649.7s

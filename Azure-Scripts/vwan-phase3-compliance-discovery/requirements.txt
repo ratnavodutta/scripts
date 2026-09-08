@@ -1,0 +1,10 @@
+azure-identity>=1.17.0
+azure-mgmt-resource>=23.1.0
+azure-mgmt-network>=27.0.0
+azure-mgmt-resourcegraph>=8.0.0
+azure-mgmt-subscription>=3.1.1
+azure-core>=1.30.0
+openpyxl>=3.1.2
+
+# Optional: only needed if your CMDB export is legacy .xls (not .xlsx).
+# xlrd>=2.0.1

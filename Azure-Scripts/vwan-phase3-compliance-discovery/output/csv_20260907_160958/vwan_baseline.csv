@@ -1,0 +1,15 @@
+Virtual WAN,Virtual Hub,Region,Address Prefix,Routing State,Subscription Name,Subscription ID,Resource Group,Firewall/NVA Type,Firewall/NVA Private IP,Hub Connections,Gateways
+,sec01pwehub-rt01,westeurope,,Provisioned,Cybersecurity - P01,8cdb6f7a-9f1b-4288-87f4-ea52f902f536,sec01pwehub-rg01,NONE_DETECTED,,0,0
+,sec01peus2hub-rt01,eastus2,,Provisioned,Cybersecurity - P01,8cdb6f7a-9f1b-4288-87f4-ea52f902f536,sec01peus2hub-rg01,NONE_DETECTED,,0,0
+d40acsr01vwan01,d40acsr01vhub01,eastus2,10.220.127.0/24,Provisioned,Dev - D40,38dc1973-b3ec-4db8-8f42-f76fc59e65b0,d40acsr01vwan01rg,NONE_DETECTED,,0,1
+n01-eus2-vwan-1,n01-wus-vhub-1,westus,10.193.16.0/23,Provisioned,Networking Production - N01,150ea8a8-4006-49a6-8c11-b7d7c2942e61,n01-eus2-vwan-rg-1,AzureFirewall,10.193.16.132,2,1
+n01-eus2-vwan-1,n01-ne-vhub-1,northeurope,10.193.64.0/23,Provisioned,Networking Production - N01,150ea8a8-4006-49a6-8c11-b7d7c2942e61,n01-eus2-vwan-rg-1,AzureFirewall,10.193.64.132,2,0
+n01-eus2-vwan-1,n01-we-vhub-1,westeurope,10.193.32.0/23,Provisioned,Networking Production - N01,150ea8a8-4006-49a6-8c11-b7d7c2942e61,n01-eus2-vwan-rg-1,AzureFirewall,10.193.32.132,6,1
+n01-eus2-vwan-1,n01-cus-vhub-1,centralus,10.193.8.0/23,Provisioned,Networking Production - N01,150ea8a8-4006-49a6-8c11-b7d7c2942e61,n01-eus2-vwan-rg-1,AzureFirewall,10.193.8.132,6,0
+n01-eus2-vwan-1,n01-eus2-vhub-1,eastus2,10.193.0.0/23,Provisioned,Networking Production - N01,150ea8a8-4006-49a6-8c11-b7d7c2942e61,n01-eus2-vwan-rg-1,AzureFirewall,10.193.0.132,20,1
+n01-eus2-vwan-1,n01-ae-vhub-1,australiaeast,10.193.40.0/23,Provisioned,Networking Production - N01,150ea8a8-4006-49a6-8c11-b7d7c2942e61,n01-eus2-vwan-rg-1,AzureFirewall,10.193.40.132,7,0
+n01-eus2-vwan-1,n01-as-vhub-1,australiasoutheast,10.193.48.0/23,Provisioned,Networking Production - N01,150ea8a8-4006-49a6-8c11-b7d7c2942e61,n01-eus2-vwan-rg-1,AzureFirewall,10.193.48.132,2,0
+n01-eus2-vwan-1,n01-cnc-vhub-1,canadacentral,10.193.24.0/23,Provisioned,Networking Production - N01,150ea8a8-4006-49a6-8c11-b7d7c2942e61,n01-eus2-vwan-rg-1,AzureFirewall,10.193.24.132,6,0
+n01-eus2-vwan-1,n01-cne-vhub-1,canadaeast,10.193.56.0/23,Provisioned,Networking Production - N01,150ea8a8-4006-49a6-8c11-b7d7c2942e61,n01-eus2-vwan-rg-1,AzureFirewall,10.193.56.132,2,0
+e01-eus2-vwan-1,e01-cus-vhub-1,centralus,10.192.8.0/23,Provisioned,Networking Test - E01,7253b84c-2f1a-4b10-9046-1fbdcc4334f1,e01-eus2-vwan-rg-1,AzureFirewall,10.192.8.132,9,0
+e01-eus2-vwan-1,e01-eus2-vhub-1,eastus2,10.192.0.0/23,Provisioned,Networking Test - E01,7253b84c-2f1a-4b10-9046-1fbdcc4334f1,e01-eus2-vwan-rg-1,AzureFirewall,10.192.0.132,23,1

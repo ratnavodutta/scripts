@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./.venv/Scripts/python.exe -m pip list)",
+      "Bash(./.venv/Scripts/python.exe -m py_compile vwan_compliance/*.py run.py)",
+      "Bash(./.venv/Scripts/python.exe run.py --help)"
+    ]
+  }
+}

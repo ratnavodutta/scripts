@@ -1,20 +1,28 @@
 <#
 .SYNOPSIS
-    Interactive wrapper around Sysinternals PsPing for finding network drops (TCP or ICMP).
+    Interactive wrapper around Sysinternals PsPing for finding network drops (TCP, ICMP or UDP).
 
 .DESCRIPTION
     Prompts for:
       1. Target IP address
-      2. Probe type  - TCP (asks for a port) or ICMP
-      3. Packet count - 5 packets, a custom number, or continuous (until Ctrl+C)
+      2. Probe type  - TCP or UDP (both ask for a port) or ICMP
+      3. Packet count - 5 packets, a custom number, or continuous (until Ctrl+C; TCP/ICMP only)
       4. Output mode - live on screen, or quiet (file only; Ctrl+C stops and finalises the log)
+      5. Save location - Enter for the default folder, or type a folder path
+
+    UDP offers two methods:
+      1. DNS query - the script itself sends a real DNS query (example.com A) over UDP once per
+         interval and waits 2 s for the reply. Works against any DNS server (e.g. 8.8.8.8 port 53),
+         with per-probe timestamps, drops and outages like TCP/ICMP.
+      2. PsPing latency test - needs a PsPing server on the target (psping -s <ip>:<port>) and
+         gives aggregate statistics only, not one line per packet.
 
     Every line is stamped with the local date/time of this machine and written to a log
     file. Failed probes (timeouts, unreachable, refused...) are tagged [DROP], and runs of
     consecutive drops are logged as outages with start time, end time and duration.
     A summary is always written, including when the run is stopped with Ctrl+C.
 
-    If TCP is chosen and no valid port is given, the user is asked whether to restart.
+    If TCP/UDP is chosen and no valid port is given, the user is asked whether to restart.
 
 .PARAMETER Interval
     Seconds between probes (default 1).
@@ -25,7 +33,7 @@
     download (Sysinternals Live) into %LOCALAPPDATA%\PsPing, added to the user PATH.
 
 .PARAMETER LogDirectory
-    Folder for the .txt log files (default: .\logs next to the script).
+    Folder for the .txt log files. If omitted, the script asks (Enter = .\logs next to the script).
 
 .EXAMPLE
     .\Invoke-PsPingProbe.ps1
@@ -45,7 +53,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 $ScriptDir = if ($PSScriptRoot) { $PSScriptRoot } else { Split-Path -Parent $MyInvocation.MyCommand.Path }
-if (-not $LogDirectory) { $LogDirectory = Join-Path $ScriptDir 'logs' }
+$DefaultLogDirectory = Join-Path $ScriptDir 'logs'
 
 # ---------------------------------------------------------------- helpers
 function Get-Stamp {
@@ -134,18 +142,35 @@ function Read-TargetIp {
 
 function Read-Protocol {
     while ($true) {
-        $choice = (Read-Host 'Select probe type: [1] TCP  [2] ICMP').Trim().ToUpper()
+        $choice = (Read-Host 'Select probe type: [1] TCP  [2] ICMP  [3] UDP').Trim().ToUpper()
         switch ($choice) {
             { $_ -in '1', 'TCP' }  { return 'TCP' }
             { $_ -in '2', 'ICMP' } { return 'ICMP' }
-            default { Write-Host 'Enter 1/TCP or 2/ICMP.' -ForegroundColor Yellow }
+            { $_ -in '3', 'UDP' }  { return 'UDP' }
+            default { Write-Host 'Enter 1/TCP, 2/ICMP or 3/UDP.' -ForegroundColor Yellow }
+        }
+    }
+}
+
+# Returns 'DNS' or 'PSPING'.
+function Read-UdpMethod {
+    while ($true) {
+        Write-Host 'UDP test method:'
+        Write-Host '  [1] DNS query - target is a DNS server (e.g. 8.8.8.8 port 53); per-probe timestamps and drops'
+        Write-Host '  [2] PsPing latency test - target must be running "psping -s <ip>:<port>"; aggregate results only'
+        $choice = (Read-Host 'Select UDP method').Trim()
+        switch ($choice) {
+            '1' { return 'DNS' }
+            '2' { return 'PSPING' }
+            default { Write-Host 'Enter 1 or 2.' -ForegroundColor Yellow }
         }
     }
 }
 
 # Returns a port number, -1 to restart the script, or $null to exit.
-function Read-TcpPort {
-    $text = (Read-Host 'Enter TCP port (1-65535)').Trim()
+function Read-Port {
+    param([string]$Protocol = 'TCP')
+    $text = (Read-Host "Enter $Protocol port (1-65535)").Trim()
     $port = 0
     if ($text -and [int]::TryParse($text, [ref]$port) -and $port -ge 1 -and $port -le 65535) { return $port }
 
@@ -158,11 +183,17 @@ function Read-TcpPort {
 
 # Returns 0 for continuous, otherwise the packet count.
 function Read-PacketCount {
+    param([switch]$NoContinuous)   # PsPing's UDP test needs a fixed count
+    $menu = 'Packets to send: [1] 5 packets  [2] Custom number  [3] Continuous (until Ctrl+C)'
+    if ($NoContinuous) { $menu = 'Packets to send: [1] 5 packets  [2] Custom number  (continuous is not available for UDP)' }
     while ($true) {
-        $choice = (Read-Host 'Packets to send: [1] 5 packets  [2] Custom number  [3] Continuous (until Ctrl+C)').Trim()
+        $choice = (Read-Host $menu).Trim()
         switch ($choice) {
             '1' { return 5 }
-            '3' { return 0 }
+            '3' {
+                if ($NoContinuous) { Write-Host 'Continuous mode is not supported for UDP. Enter 1 or 2.' -ForegroundColor Yellow }
+                else { return 0 }
+            }
             '2' {
                 $n = 0
                 $text = (Read-Host 'How many packets? (1-1000000)').Trim()
@@ -186,10 +217,30 @@ function Read-OutputMode {
     }
 }
 
+# Enter = default folder; otherwise the typed folder. Returns a usable, writable directory.
+function Read-LogDirectory {
+    param([string]$Default)
+    while ($true) {
+        $text = (Read-Host "Save log to folder (press Enter for default: $Default)").Trim().Trim('"')
+        $dir  = if ($text) { $text } else { $Default }
+        try {
+            if (-not (Test-Path -LiteralPath $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
+            $full  = (Resolve-Path -LiteralPath $dir).Path
+            $probe = Join-Path $full ('.write_test_{0}' -f [guid]::NewGuid().ToString('N'))
+            New-Item -ItemType File -Path $probe -Force | Out-Null
+            Remove-Item -LiteralPath $probe -Force
+            return $full
+        }
+        catch {
+            Write-Host "Cannot use '$dir': $($_.Exception.Message)" -ForegroundColor Yellow
+        }
+    }
+}
+
 # ---------------------------------------------------------------- probe engine
-$script:DropPattern = '(?i)timed out|unreachable|could not connect|refused|no route|general failure|ttl expired|failed|error|unknown host|could not (find|resolve)'
+$script:DropPattern = '(?i)timed out|unreachable|more data is available|could not connect|refused|no route|general failure|ttl expired|failed|error|unknown host|could not (find|resolve)'
 $script:OkPattern   = '(?i)^\s*(Reply from|Connecting to).*:\s*[\d.,]+\s*ms\s*$'
-$script:SkipPattern = '(?i)^\s*(Sent\b|Minimum\b|Approximate\b|Ping statistics|TCP (connect|ping)|Latency)'
+$script:SkipPattern = '(?i)^\s*(Sent\b|Minimum\b|Approximate\b|Ping statistics|TCP (connect|ping)|Latency|Error (pinging|connecting)|UDP (latency|roundtrip))'
 
 function Write-LogLine {
     param([string]$Text, [string]$Color)
@@ -229,26 +280,117 @@ function Close-Outage {
     $script:OutageLost  = 0
 }
 
+function Register-Drop {
+    param([string]$Text)
+    $script:Lost++
+    if ($null -eq $script:OutageStart) {
+        $script:OutageStart = Get-Date
+        $script:OutageLost  = 0
+    }
+    $script:OutageLost++
+    Write-Quiet "[DROP] $Text" 'Red'
+}
+
+function Register-Ok {
+    param([string]$Text)
+    $script:Ok++
+    Close-Outage
+    Write-Quiet $Text
+}
+
 function Invoke-ProbeLine {
     param([string]$Line)
 
+    # UDP latency test prints progress percentages (repeated lines); keep them out of the log.
+    if ($script:Protocol -eq 'UDP' -and $Line -match '\d+%\s*$') { return }
+    if ($script:Protocol -eq 'UDP' -and $Line -match 'Sent = (\d+), Size') { $script:Ok += [int]$Matches[1] }
+    # UDP has no connection: PsPing prints "Connected" as soon as its local socket exists.
+    if ($script:Protocol -eq 'UDP' -and $Line -match '^\s*Connected\s*$') { return }
+
     if ($Line -notmatch $script:SkipPattern -and $Line -match $script:DropPattern) {
-        $script:Lost++
-        if ($null -eq $script:OutageStart) {
-            $script:OutageStart = Get-Date
-            $script:OutageLost  = 0
-        }
-        $script:OutageLost++
-        Write-Quiet "[DROP] $Line" 'Red'
+        Register-Drop $Line
         return
     }
     if ($Line -match $script:OkPattern) {
-        $script:Ok++
-        Close-Outage
-        Write-Quiet $Line
+        Register-Ok $Line
         return
     }
     Write-Quiet $Line
+}
+
+# ---------------------------------------------------------------- UDP DNS probe (no PsPing needed)
+function New-DnsQuery {
+    param([int]$Id, [string]$Name = 'example.com')
+    $b = New-Object System.Collections.Generic.List[byte]
+    $hi = [byte](($Id -shr 8) -band 255)
+    $lo = [byte]($Id -band 255)
+    $b.AddRange([byte[]]@($hi, $lo, 0x01, 0x00, 0, 1, 0, 0, 0, 0, 0, 0))   # header: RD=1, 1 question
+    foreach ($label in $Name.Split('.')) {
+        $bytes = [System.Text.Encoding]::ASCII.GetBytes($label)
+        $b.Add([byte]$bytes.Length)
+        $b.AddRange($bytes)
+    }
+    $b.AddRange([byte[]]@(0, 0, 1, 0, 1))                                                              # root, QTYPE=A, QCLASS=IN
+    return ,$b.ToArray()
+}
+
+function Invoke-DnsUdpLoop {
+    param([System.Net.IPAddress]$Ip, [int]$Port, [int]$Count)
+
+    $timeoutMs = 2000
+    $rcodes    = @{ 0 = 'NOERROR'; 1 = 'FORMERR'; 2 = 'SERVFAIL'; 3 = 'NXDOMAIN'; 4 = 'NOTIMP'; 5 = 'REFUSED' }
+    $client    = New-Object System.Net.Sockets.UdpClient($Ip.AddressFamily)
+    try {
+        # A connected UDP socket lets Windows report ICMP "port unreachable" as WSAECONNRESET.
+        $client.Connect($Ip, $Port)
+        $seq = 0
+        while ($Count -eq 0 -or $seq -lt $Count) {
+            $seq++
+            $id    = Get-Random -Minimum 1 -Maximum 65535
+            $query = New-DnsQuery -Id $id
+            $tick  = [System.Diagnostics.Stopwatch]::StartNew()
+            $reply = $null
+            $why   = $null
+            try {
+                [void]$client.Send($query, $query.Length)
+                $ep = New-Object System.Net.IPEndPoint($Ip, $Port)
+                while ($null -eq $reply -and $tick.ElapsedMilliseconds -lt $timeoutMs) {
+                    $client.Client.ReceiveTimeout = [Math]::Max(1, $timeoutMs - [int]$tick.ElapsedMilliseconds)
+                    $data = $client.Receive([ref]$ep)
+                    # ignore late replies to earlier probes: match the query ID and the QR (response) bit
+                    if ($data.Length -ge 12 -and $data[0] -eq (($id -shr 8) -band 255) -and $data[1] -eq ($id -band 255) -and ($data[2] -band 0x80)) {
+                        $reply = $data
+                    }
+                }
+                if ($null -eq $reply) { $why = "no reply within $timeoutMs ms" }
+            }
+            catch {
+                if ($_.Exception -is [System.Management.Automation.PipelineStoppedException]) { throw }
+                $se = $_.Exception
+                while ($se -and $se -isnot [System.Net.Sockets.SocketException]) { $se = $se.InnerException }
+                if ($se -and $se.SocketErrorCode -eq [System.Net.Sockets.SocketError]::TimedOut) { $why = "no reply within $timeoutMs ms" }
+                elseif ($se -and $se.SocketErrorCode -eq [System.Net.Sockets.SocketError]::ConnectionReset) { $why = 'ICMP port unreachable (nothing is listening on that UDP port)' }
+                elseif ($se) { $why = "socket error: $($se.Message)" }
+                else { $why = "error: $($_.Exception.Message)" }
+            }
+
+            if ($reply) {
+                $rc = $rcodes[[int]($reply[3] -band 0x0F)]
+                if (-not $rc) { $rc = "RCODE $($reply[3] -band 0x0F)" }
+                Register-Ok ("OK   #{0}  rtt={1:N2} ms  | DNS reply from {2}:{3} ({4}, {5} bytes)" -f $seq, $tick.Elapsed.TotalMilliseconds, $Ip, $Port, $rc, $reply.Length)
+            } else {
+                Register-Drop "#$seq $why"
+            }
+
+            if ($Count -eq 0 -or $seq -lt $Count) {
+                $wait = ($Interval * 1000) - [int]$tick.ElapsedMilliseconds
+                if ($wait -gt 0) { Start-Sleep -Milliseconds $wait }
+            }
+        }
+    }
+    finally {
+        $client.Close()
+    }
 }
 
 function Write-Summary {
@@ -259,8 +401,23 @@ function Write-Summary {
 
     Write-LogLine '----------------------------- SUMMARY -----------------------------' 'Cyan'
     Write-LogLine ("Started : {0:yyyy-MM-dd HH:mm:ss}   Ended : {1:yyyy-MM-dd HH:mm:ss}   Duration : {2:hh\:mm\:ss}" -f $script:StartTime, (Get-Date), $run) 'Cyan'
-    Write-LogLine "Probes  : $total   Successful : $($script:Ok)   Dropped : $($script:Lost)   Loss : $pct%" 'Cyan'
-    if ($script:Outages.Count -eq 0) {
+    if ($script:Protocol -eq 'UDP' -and -not $script:UdpDns) {
+        Write-LogLine "UDP     : $($script:Ok) datagram(s) completed by PsPing   Errors : $($script:Lost)" 'Cyan'
+        if ($script:Ok -eq 0) {
+            Write-LogLine 'Result  : FAILED - PsPing completed 0 UDP round trips.' 'Yellow'
+            Write-LogLine '          PsPing UDP only works against a host running "psping -s <ip>:<port>" (UDP port allowed through firewalls).' 'Yellow'
+            Write-LogLine '          Other UDP services (e.g. DNS 8.8.8.8:53) do not answer it. "Connected" only means the local UDP socket was created.' 'Yellow'
+        }
+        Write-LogLine 'Note    : PsPing UDP reports aggregate latency, not one line per packet, so per-drop timestamps are not available.' 'Cyan'
+    } else {
+        Write-LogLine "Probes  : $total   Successful : $($script:Ok)   Dropped : $($script:Lost)   Loss : $pct%" 'Cyan'
+        if ($script:UdpDns) {
+            Write-LogLine 'Note    : UDP DNS probe - a probe is OK when the server replies within 2 s; silence or ICMP port unreachable is a drop.' 'Cyan'
+        }
+    }
+    if ($script:Protocol -eq 'UDP' -and -not $script:UdpDns) {
+        # aggregate test only: no per-packet timing, so no outage tracking
+    } elseif ($script:Outages.Count -eq 0) {
         Write-LogLine 'Outages : none detected' 'Cyan'
     } else {
         Write-LogLine "Outages : $($script:Outages.Count)" 'Yellow'
@@ -279,10 +436,13 @@ function Invoke-Probe {
         [int]$Port,
         [int]$Count,        # 0 = continuous
         [bool]$Live,
-        [string]$LogFile
+        [string]$LogFile,
+        [string]$UdpMode = ''   # UDP only: 'DNS' or 'PSPING'
     )
 
     $script:LogFile     = $LogFile
+    $script:Protocol    = $Protocol
+    $script:UdpDns      = ($Protocol -eq 'UDP' -and $UdpMode -eq 'DNS')
     $script:Live        = $Live
     $script:Ok          = 0
     $script:Lost        = 0
@@ -294,20 +454,42 @@ function Invoke-Probe {
     $ipText = $Ip.ToString()
     if ($Ip.AddressFamily -eq [System.Net.Sockets.AddressFamily]::InterNetworkV6) { $ipText = "[$ipText]" }
 
-    # PsPing: "host" = ICMP ping, "host:port" = TCP connect ping.
-    $destination = if ($Protocol -eq 'TCP') { "${ipText}:$Port" } else { $ipText }
-    $psArgs = @('-accepteula', '-i', $Interval, '-w', 0)         # -w 0: no warm-up, so every attempt is counted
-    $psArgs += if ($Count -eq 0) { '-t' } else { @('-n', $Count) }
-    $psArgs += $destination
+    # PsPing: "host" = ICMP ping, "host:port" = TCP connect ping, "-u host:port" = UDP latency test.
+    $destination = if ($Protocol -eq 'ICMP') { $ipText } else { "${ipText}:$Port" }
+    if ($script:UdpDns) {
+        $psArgs = @()
+    } elseif ($Protocol -eq 'UDP') {
+        # Latency-test mode: fixed count, no interval switch, needs "psping -s" on the target.
+        $psArgs = @('-accepteula', '-u', '-l', 32, '-n', $Count, '-w', 0, $destination)
+    } else {
+        $psArgs = @('-accepteula', '-i', $Interval, '-w', 0)     # -w 0: no warm-up, so every attempt is counted
+        $psArgs += if ($Count -eq 0) { '-t' } else { @('-n', $Count) }
+        $psArgs += $destination
+    }
 
     $countText = if ($Count -eq 0) { 'continuous' } else { $Count }
-    Write-LogLine "===== Probe started | Host: $env:COMPUTERNAME | Type: $Protocol | Target: $destination | Packets: $countText | Interval: ${Interval}s =====" 'Cyan'
-    Write-LogLine "Command: $(Split-Path $Exe -Leaf) $($psArgs -join ' ')"
+    $intervalText = if ($Protocol -eq 'UDP' -and -not $script:UdpDns) { 'n/a' } else { "${Interval}s" }
+    $typeText     = if ($script:UdpDns) { 'UDP (DNS query)' } elseif ($Protocol -eq 'UDP') { 'UDP (PsPing latency test)' } else { $Protocol }
+    Write-LogLine "===== Probe started | Host: $env:COMPUTERNAME | Type: $typeText | Target: $destination | Packets: $countText | Interval: $intervalText =====" 'Cyan'
+    if ($script:UdpDns) {
+        Write-LogLine 'Command: built-in UDP DNS probe (query: example.com A, reply timeout: 2000 ms)'
+    } else {
+        Write-LogLine "Command: $(Split-Path $Exe -Leaf) $($psArgs -join ' ')"
+    }
     if (-not $Live) {
         Write-Host "Quiet mode: writing to $LogFile" -ForegroundColor Cyan
         Write-Host 'Only drops/recoveries are shown here. Press Ctrl+C to stop and save the summary.' -ForegroundColor Cyan
     } elseif ($Count -eq 0) {
         Write-Host 'Press Ctrl+C to stop and save the summary.' -ForegroundColor Cyan
+    }
+
+    if ($script:UdpDns) {
+        try { Invoke-DnsUdpLoop -Ip $Ip -Port $Port -Count $Count }
+        finally {
+            Write-Summary
+            Write-Host "Log saved to: $LogFile" -ForegroundColor Cyan
+        }
+        return
     }
 
     # PsPing writes UTF-16 to stdout but plain ANSI to stderr, so the two streams are decoded
@@ -364,10 +546,6 @@ if (-not $exe) {
     }
     if (-not $exe) { throw 'PsPing is required. Install it and run the script again.' }
 }
-if (-not (Test-Path -LiteralPath $LogDirectory)) {
-    New-Item -ItemType Directory -Path $LogDirectory -Force | Out-Null
-}
-
 Write-Host "Using $exe" -ForegroundColor DarkGray
 Write-Host "Local time: $(Get-Stamp)" -ForegroundColor DarkGray
 
@@ -375,10 +553,12 @@ do {
     $restart  = $false
     $ip       = Read-TargetIp
     $protocol = Read-Protocol
+    $udpMode  = ''
+    if ($protocol -eq 'UDP') { $udpMode = Read-UdpMethod }
     $port     = 0
 
-    if ($protocol -eq 'TCP') {
-        $port = Read-TcpPort
+    if ($protocol -in 'TCP', 'UDP') {
+        $port = Read-Port -Protocol $protocol
         if ($null -eq $port) {
             Write-Host 'Exiting without running a probe.'
             break
@@ -386,14 +566,15 @@ do {
         if ($port -eq -1) { $restart = $true; continue }
     }
 
-    $count = Read-PacketCount
+    $count = if ($udpMode -eq 'PSPING') { Read-PacketCount -NoContinuous } else { Read-PacketCount }
     $live  = Read-OutputMode
+    if (-not $LogDirectory) { $LogDirectory = Read-LogDirectory -Default $DefaultLogDirectory }
 
     $safeIp  = $ip.ToString() -replace '[:\.]', '_'
-    $suffix  = if ($protocol -eq 'TCP') { "tcp$port" } else { 'icmp' }
+    $suffix  = if ($protocol -eq 'ICMP') { 'icmp' } else { "$($protocol.ToLower())$port" }
     $logFile = Join-Path $LogDirectory ("psping_{0}_{1}_{2}.txt" -f $safeIp, $suffix, (Get-Date -Format 'yyyyMMdd_HHmmss'))
 
-    Invoke-Probe -Exe $exe -Ip $ip -Protocol $protocol -Port $port -Count $count -Live $live -LogFile $logFile
+    Invoke-Probe -Exe $exe -Ip $ip -Protocol $protocol -Port $port -Count $count -Live $live -LogFile $logFile -UdpMode $udpMode
 
     $restart = Read-YesNo 'Run another probe?'
 } while ($restart)
